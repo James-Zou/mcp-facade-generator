@@ -1,0 +1,28 @@
+MCP Facade Generator
+Copyright 2024 James Zou
+
+This product includes software developed by
+James Zou (https://github.com/James-Zou)
+
+## API 文档
+
+详细的 API 文档请参考 [JavaDoc](https://james-zou-javadoc-url)
+
+## 贡献指南
+
+1. Fork 本仓库
+2. 创建特性分支：`git checkout -b my-new-feature`
+3. 提交改动：`git commit -am 'Add some feature'`
+4. 推送到分支：`git push origin my-new-feature`
+5. 提交 Pull Request
+
+## 版本历史
+
+### 1.0.0 (2024-03-19)
+- 初始版本发布
+- 支持基本的 Facade 生成功能
+- 支持 JDK 17
+
+## 许可证
+
+本项目采用 [Apache License 2.0](LICENSE) 许可证。
