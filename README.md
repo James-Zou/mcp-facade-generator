@@ -3,7 +3,7 @@
 # MCP Facade Generator
 
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
-[![Maven Central](https://img.shields.io/maven-central/v/org.example/mcp-facade-generator.svg)](https://search.maven.org/search?q=g:org.example%20AND%20a:mcp-facade-generator)
+[![Maven Central](https://img.shields.io/maven-central/v/org.example/mcp-facade-generator.svg)](https://search.maven.org/search?q=g:com.unionhole.mcp:mcp-facade-generator)
 [![Java Support](https://img.shields.io/badge/Java-17+-green.svg)](https://openjdk.java.net/)
 [![GitHub Release](https://img.shields.io/github/v/release/james-zou/mcp-facade-generator)](https://github.com/james-zou/mcp-facade-generator/releases)
 
