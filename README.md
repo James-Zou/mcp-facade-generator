@@ -35,7 +35,7 @@
 ### 1、引入Maven 依赖 
 ``` java
 <dependency>
-    <groupId>com.unionhole.mcp</groupId>
+    <groupId>com.unionhole</groupId>
     <artifactId>mcp-facade-generator</artifactId>
     <version>1.0.0</version>
 </dependency>
