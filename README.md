@@ -9,6 +9,7 @@
 
 - 🚀**一个强大的 MCP 协议 Facade 生成器，支持自动生成 MCP 协议接口实现**
 - 🔌**不用关心 MCP server的开发过程，快速将现有业务接口接入 MCP 协议**
+- 🚀**支持一键生成springboot+MCP demo工程**
 ## 目录
 
 - [特性](#特性)
@@ -37,7 +38,8 @@
 <dependency>
     <groupId>com.unionhole</groupId>
     <artifactId>mcp-facade-generator</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
+    <scope>provided</scope>
 </dependency>
 ```
 
@@ -88,8 +90,114 @@
 参数：
 - `description`: 方法描述
 
+#### @MCPMethod
 
+用于标记需要在 Facade 中生成的方法。如果服务类中的方法没有此注解，在 1.0.1 版本后将不会被生成到 Facade 中。
+
+参数：
+- `description`：方法描述，将用于生成 @Tool 注解的描述（可选，默认使用方法的 JavaDoc）
 ```
+### Demo 项目生成
+
+从 1.0.1 版本开始，支持在编译时自动生成一个完整的示例项目。默认情况下，demo 项目生成功能是禁用的。你可以通过以下两种方式启用 demo 项目生成：
+
+#### 方式一：Maven 编译器参数配置（推荐）
+
+在使用 mcp-facade-generator 的项目的 pom.xml 中添加以下配置：
+
+```xml
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.11.0</version>
+            <configuration>
+                <source>${java.version}</source>
+                <target>${java.version}</target>
+                <annotationProcessorPaths>
+                    <path>
+                        <groupId>com.unionhole</groupId>
+                        <artifactId>mcp-facade-generator</artifactId>
+                        <version>1.0.1</version>
+                    </path>
+                </annotationProcessorPaths>
+                <compilerArgs>
+                    <arg>-Amcp.demo.output=true</arg>
+                </compilerArgs>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
+
+#### 方式二：Spring Boot 配置文件 + Maven 配置（不推荐）
+
+1. 在 `application.properties` 中添加配置：
+```properties
+# 设置为 true 启用 demo 项目生成
+mcp.demo.output=true
+```
+
+或者在 `application.yml` 中：
+```yaml
+mcp:
+  demo:
+    output: true
+```
+
+2. 在 pom.xml 中添加配置（必需）：
+```xml
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.11.0</version>
+            <configuration>
+                <source>${java.version}</source>
+                <target>${java.version}</target>
+                <annotationProcessorPaths>
+                    <path>
+                        <groupId>com.unionhole</groupId>
+                        <artifactId>mcp-facade-generator</artifactId>
+                        <version>1.0.1</version>
+                    </path>
+                </annotationProcessorPaths>
+                <compilerArgs>
+                    <arg>-AmcpConfigFile=${project.basedir}/src/main/resources/application.properties</arg>
+                </compilerArgs>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
+
+> **重要说明：**
+> 1. 必须在 Maven 编译器插件中配置 `annotationProcessorPaths`，否则注解处理器不会被激活
+> 2. 使用方式二时，配置文件必须在编译时存在，且路径必须正确
+> 3. 推荐使用方式一，直接通过编译器参数指定配置，更加可靠
+> 4. 如果同时使用了两种配置方式，编译器参数的优先级更高
+> 5. 当启用 demo 项目生成时，项目将自动生成在当前工程的 `demo` 目录下
+
+生成的 Demo 项目包含：
+- 完整的项目结构
+- Spring Boot + Spring AI MCP 配置
+- 示例服务和 Facade 类
+- 可运行的测试用例
+
+### 生成的 Demo 项目验证
+
+生成完成后，你可以：
+
+1. 进入生成的 demo 项目目录
+2. 执行 Maven 命令进行测试：
+```bash
+cd /path/to/demo/project
+mvn clean test
+```
+
+如果测试通过，说明 demo 项目生成成功。
 
 ### 生成规则
 
@@ -187,6 +295,13 @@ public class WeatherServiceFacade {
 
 ## 🔄 版本历史
 
+### v1.0.1 (2024-03-28)
+- 优化 Facade 生成逻辑，移除 MCPRequest/MCPResponse 包装
+- 增加 @MCPMethod 注解支持，实现方法级别的生成控制
+- 新增 Demo 项目生成功能，支持通过配置自动生成示例工程
+- 改进异常处理机制，直接抛出原始异常
+- 优化文档和注释生成
+
 ### v1.0.0 (2024-03-19)
 - ✨ 初始版本发布
 - 🎉 支持基本的 Facade 生成功能
@@ -214,7 +329,86 @@ public class WeatherServiceFacade {
 
 ---
 
+## 环境要求
 
+### Java 版本要求
+- JDK 17 或更高版本
+- 确保 JAVA_HOME 环境变量正确设置
+- 确保 Maven 使用正确的 JDK 版本
+
+### 版本检查
+1. 检查 Java 版本：
+```bash
+java -version
+```
+应显示 17 或更高版本
+
+2. 检查 Maven 使用的 Java 版本：
+```bash
+mvn -v
+```
+确保显示的 Java 版本是 17 或更高版本
+
+### 常见问题解决
+
+1. 如果遇到 "无效的目标发行版：17.x.x" 错误：
+
+   a. 检查并设置 JAVA_HOME：
+   ```bash
+   # Windows
+   echo %JAVA_HOME%
+   # Linux/Mac
+   echo $JAVA_HOME
+   ```
+
+   b. 确保 JAVA_HOME 指向 JDK 17 安装目录
+
+   c. 在项目的 pom.xml 中明确指定编译器版本：
+   ```xml
+   <properties>
+       <java.version>17</java.version>
+       <maven.compiler.source>${java.version}</maven.compiler.source>
+       <maven.compiler.target>${java.version}</maven.compiler.target>
+   </properties>
+
+   <build>
+       <plugins>
+           <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-compiler-plugin</artifactId>
+               <version>3.11.0</version>
+               <configuration>
+                   <source>${java.version}</source>
+                   <target>${java.version}</target>
+                   <encoding>UTF-8</encoding>
+                   <annotationProcessors>
+                       <annotationProcessor>com.unionhole.mcp.processor.MCPFacadeProcessor</annotationProcessor>
+                   </annotationProcessors>
+               </configuration>
+           </plugin>
+       </plugins>
+   </build>
+   ```
+
+2. 如果使用 IDE（如 IntelliJ IDEA）：
+   - 确保项目结构设置（Project Structure）中的 JDK 版本为 17
+   - 确保 Maven 设置中使用的 JDK 版本为 17
+   - 刷新 Maven 项目配置
+
+3. 对于 Windows 用户：
+   - 检查系统环境变量中是否正确设置 JAVA_HOME
+   - 确保 Path 变量包含 %JAVA_HOME%\bin
+
+4. 对于 Linux/Mac 用户：
+   - 可以使用 sdkman 管理 Java 版本：
+   ```bash
+   # 安装 sdkman
+   curl -s "https://get.sdkman.io" | bash
+   # 安装 JDK 17
+   sdk install java 17.0.x-zulu
+   # 设置默认版本
+   sdk default java 17.0.x-zulu
+   ```
 
 **[⬆ 返回顶部](#mcp-facade-generator)**
 

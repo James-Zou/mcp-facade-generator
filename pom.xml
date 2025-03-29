@@ -6,15 +6,17 @@
 
     <groupId>com.unionhole</groupId>
     <artifactId>mcp-facade-generator</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>mcp-facade-generator</name>
     <url>https://github.com/James-Zou/mcp-facade-generator</url>
     <description>A lightweight tool for generating type-safe MCP facade interfaces and implementations in Java projects.</description>
 
     <properties>
+        <java.version>17</java.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <auto-service.version>1.1.1</auto-service.version>
     </properties>
 
@@ -46,16 +48,11 @@
                 <configuration>
                     <source>17</source>
                     <target>17</target>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>com.google.auto.service</groupId>
-                            <artifactId>auto-service</artifactId>
-                            <version>${auto-service.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
+                    <encoding>UTF-8</encoding>
                     <compilerArgs>
                         <arg>-parameters</arg>
                     </compilerArgs>
+                    <proc>none</proc>
                 </configuration>
             </plugin>
             <plugin>
